@@ -44,13 +44,77 @@ export class Category {
       try {
         const rows = (<RowDataPacket> result)
         const gameResult: Category[] = []
-        for (let i = 0; i++; i < rows.length) {
+        for (let i = 0; i < rows.length; i++) {
           gameResult.push(new Category(rows[i].id, rows[i].category_name, rows[i].category_description, rows[i].rarity))
         }
         if (gameResult) {
           resolve(gameResult)
         } else {
           resolve([])
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
+
+  static async insertCategory (category_name: string, category_description: string, rarity: number) : Promise<Boolean> {
+    const queryString = `
+      INSERT INTO category (category_name,category_description,rarity) VALUES('${category_name}','${category_description}',${rarity})`
+
+    const result = await dbQuery(queryString)
+
+    return new Promise((resolve, reject) => {
+      try {
+        
+        if(result) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
+
+  static async updateCategory (old_category_name: string, category_name: string, category_description: string, rarity: number) : Promise<Boolean> {
+    console.log(old_category_name);
+
+    let queryString = `SELECT id FROM category as c WHERE c.category_name = '${old_category_name}' LIMIT 1`
+
+    let oldCatId = await dbQuery(queryString);
+    let id;
+
+    const row = (<RowDataPacket> oldCatId)[0]
+    if(row){
+      id = row.id
+    } else {
+      id = -1;
+    }
+    console.log(`ID: ${id}`);
+
+    if(id == -1){
+      return new Promise((resolve, reject) => {
+        try {
+            resolve(false)
+        } catch {
+          reject(new Error('ID checking error'))
+        }
+      })
+    }
+    queryString = `
+      UPDATE category SET category_name = '${category_name}', category_description = '${category_description}', rarity = ${rarity} WHERE id = ${id}`
+
+    const result = await dbQuery(queryString)
+
+    return new Promise((resolve, reject) => {
+      try {
+        
+        if(result) {
+          resolve(true)
+        } else {
+          resolve(false)
         }
       } catch {
         reject(new Error('DB Connection OR Query Issue'))

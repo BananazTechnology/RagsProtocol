@@ -121,4 +121,80 @@ export class Category {
       }
     })
   }
+
+  static async removeCategory (old_category_name: string) : Promise<Boolean> {
+    console.log(old_category_name);
+
+    let queryString = `SELECT id,category_name FROM category as c WHERE c.category_name = '${old_category_name}' LIMIT 1`
+
+    let oldCatId = await dbQuery(queryString);
+    let id;
+
+    const row = (<RowDataPacket> oldCatId)[0]
+    if(row){
+      id = row.id
+    } else {
+      id = -1;
+    }
+    console.log(`ID: ${id}`);
+
+    if(id == -1){
+      return new Promise((resolve, reject) => {
+        try {
+            resolve(false)
+        } catch {
+          reject(new Error('ID checking error'))
+        }
+      })
+    }
+    queryString = `
+      DELETE FROM category WHERE id = ${id}`
+    const result = await dbQuery(queryString)
+
+    queryString = `
+      DELETE FROM responses WHERE category_id = ${id}`
+    const responsesResult = await dbQuery(queryString)
+
+    return new Promise((resolve, reject) => {
+      try {
+        
+        if(result && responsesResult) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
+
+  static async getCategoryByName (category_name: string) : Promise<Category|undefined> {
+
+    console.log(`CATEGORY NAME: ${category_name}`)
+    let queryString = `SELECT * FROM category as c WHERE c.category_name = '${category_name}' LIMIT 1`
+
+    let result = await dbQuery(queryString);
+
+    const row = (<RowDataPacket> result)[0]
+    console.log(row)
+    let category: Category;
+    if(row){
+      category = new Category(row[0].id, row[0].category_name, row[0].category_description, row[0].rarity)
+      console.log(`CATEGORY: ${category}`);
+    } 
+
+    return new Promise((resolve, reject) => {
+      try {
+        
+        if(category) {
+          resolve(category)
+        } else {
+          resolve(undefined)
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
 }

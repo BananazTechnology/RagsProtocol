@@ -4,16 +4,14 @@ import { User } from '../../classes/user'
 import { SubCommand } from '../../interfaces/subCommand'
 import { LogResult } from '../../classes/logResult'
 import { LogStatus } from '../../resources/logStatus'
-import { View } from './category-view'
-import { Add } from './category-add'
-import { Edit } from './category-update'
-import { Remove } from './category-remove'
+import { View } from './response-view'
+import { Add } from './response-add'
 
-export class Category extends Command {
-  name = 'category'
-  description = 'Category Command'
+export class Response extends Command {
+  name = 'response'
+  description = 'Response Command'
   type = 'CHAT_INPUT'
-  options: SubCommand[] = [new View(), new Add(), new Edit(), new Remove()]//new Create(), new View(), new Other(), new Edit()]
+  options: SubCommand[] = [new View(), new Add()];//new View(), new Add(), new Edit(), new Remove()]
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {
     return new Promise((resolve, reject) => {

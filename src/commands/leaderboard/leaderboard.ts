@@ -13,11 +13,9 @@ export class Leaderboard extends Command {
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {
     try {
       await interaction.deferReply({ ephemeral: true })
-      console.log('Gets here:');
       let leaderboard = await Balance.getLeaderboard()
       let top15 = '```';
       for(let i = 0; i < 15; i++) {
-        console.log('gets here')
         if(leaderboard[i]){
             const lUser = await User.getByDiscordId(leaderboard[i].getDiscordID());
             if(lUser) {

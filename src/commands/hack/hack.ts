@@ -12,7 +12,7 @@ export class Hack extends Command {
   description = 'try your luck!'
   type = 'CHAT_INPUT'
   cooldown = 180
-  requiredRole = 930216594737594439n;
+  requiredRole = 930216594737594439n
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {
     await interaction.deferReply()

@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  discord-fishing-game-bot:
-    image: bananaztech/discord-fishing-game-bot:latest
-    container_name: discord-fishing-game-bot-prod
+  discord-rags-game-bot:
+    image: bananaztech/discord-rags-game-bot:latest
+    container_name: discord-rags-game-bot-prod
     restart: always
     depends_on:
       - user-sys-api-ts

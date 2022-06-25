@@ -11,7 +11,7 @@ export class Hack extends Command {
   name = 'hack'
   description = 'try your luck!'
   type = 'CHAT_INPUT'
-  cooldown = 0.01
+  cooldown = 180
   requiredRole = 930216594737594439n;
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {

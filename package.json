@@ -2,10 +2,10 @@
   "name": "rags-game",
   "version": "1.0.0",
   "description": "rags.cool Discord Bot",
-  "main": "src/Bot.ts",
+  "main": "src/bot.ts",
   "scripts": {
-    "start": "ts-node src/Bot.ts",
-    "dev": "nodemon src/Bot.ts"
+    "start": "ts-node src/bot.ts",
+    "dev": "nodemon src/bot.ts"
   },
   "repository": {
     "type": "git",

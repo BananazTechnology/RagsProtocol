@@ -6,12 +6,14 @@ import { LogResult } from '../../classes/logResult'
 import { LogStatus } from '../../resources/logStatus'
 import { View } from './response-view'
 import { Add } from './response-add'
+import { Remove } from './response-remove'
+import { Update } from './response-update'
 
 export class Response extends Command {
   name = 'response'
   description = 'Response Command'
   type = 'CHAT_INPUT'
-  options: SubCommand[] = [new View(), new Add()];//new View(), new Add(), new Edit(), new Remove()]
+  options: SubCommand[] = [new View(), new Add(), new Update(), new Remove()];//new View(), new Add(), new Edit(), new Remove()]
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {
     return new Promise((resolve, reject) => {

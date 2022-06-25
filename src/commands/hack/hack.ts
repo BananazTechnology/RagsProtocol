@@ -1,4 +1,4 @@
-import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js'
+import { BaseCommandInteraction, Client, MessageEmbed, TextChannel } from 'discord.js'
 import { User } from '../../classes/user'
 import { Command } from '../../interfaces/command'
 import { LogResult } from '../../classes/logResult'
@@ -24,7 +24,7 @@ export class Hack extends Command {
       })
     } else {
       try {
-        const randNum = Math.floor(Math.random() * 100)
+        const randNum = Math.floor(Math.random() * 301)
         let categories = await Category.getAllCategories()
         let previousRarity = 0
         let chosenOne: Category|undefined
@@ -66,14 +66,50 @@ export class Hack extends Command {
           })
         }
         let points = 0;
+        let totalpoints = 0;
         if(user){
           points = Math.floor(Math.random() * (result.getTopPoints() - result.getBottomPoints() + 1)) + result.getBottomPoints();
-          Balance.updateBalance(user.getId(),points, user.getDiscordId());
+          await Balance.updateBalance(user.getId(),points, user.getDiscordId());
+          totalpoints = await GameResult.getBalance(user.getId());
         }
         const embed = new MessageEmbed()
           .setColor('#FFA500')
           .setTitle(chosenOne.getCategoryName())
-          .setDescription(`${chosenOne.getCategoryDescription()} \n ${result.getMessage()} \n\n*You earned* **${points}** *points*`)
+          .setDescription(`${chosenOne.getCategoryDescription()} \n ${result.getMessage()} \n\n*You earned* **${points}** *points* \n***You have ${totalpoints} total points!***`)
+
+        const cat = result.getCategory()
+        if(cat > 0 && cat < 8) {
+          
+          switch(cat) {
+            case 1: embed.setColor('#FF0101');
+            break;
+
+            case 2: embed.setColor('#FF8401');
+            break;
+
+            case 3: embed.setColor('#FFBE01');
+            break;
+
+            case 4: embed.setColor('#EC01FF');
+            break;
+
+            case 5: embed.setColor('#01FFEC');
+            break;
+
+            case 6: embed.setColor('#18FF01');
+            break;
+
+            case 7: embed.setColor('#FBFF01');
+            break;
+          }
+        }
+
+        if(cat == 7 && user ) {
+          sendToOne(client,'940798983863930950',`JACKPOT ${user.getDiscordName()} HAS WON A NIDUS. Here's their wallet: ${user.getWalletAddress()}`)
+        }
+
+        
+
 
 
         await interaction.followUp({
@@ -90,5 +126,15 @@ export class Hack extends Command {
         })
       }
     }
+  }
+}
+
+async function sendToOne (client: Client, id: string, msg: string) {
+  if (!id) return
+  const channel = await client.channels.fetch(id)
+  // Using a type guard to narrow down the correct type
+  if(channel) {
+    if (!((channel): channel is TextChannel => channel.type === 'GUILD_TEXT')(channel)) return
+    channel.send(msg)
   }
 }

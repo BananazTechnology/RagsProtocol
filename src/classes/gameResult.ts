@@ -111,4 +111,89 @@ export class GameResult {
       }
     })
   }
+
+  static async removeResponse (messageID: Number) : Promise<Boolean> {
+
+    let queryString = `
+      DELETE FROM responses WHERE id = ${messageID}`
+    const result = await dbQuery(queryString)
+
+    return new Promise((resolve, reject) => {
+      try {
+        
+        if(result) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
+
+  static async updateResponse (existingID: number, newMessage: string, newCategoryName: string, bottom_points: number, top_points: number) : Promise<Boolean> {
+
+    let queryString = `SELECT id FROM category as c WHERE c.category_name = '${newCategoryName}' LIMIT 1`
+
+    let oldCatId = await dbQuery(queryString);
+    let id;
+
+    const row = (<RowDataPacket> oldCatId)[0]
+    if(row){
+      id = row.id
+    } else {
+      id = -1;
+    }
+
+    if(id == -1){
+      return new Promise((resolve, reject) => {
+        try {
+            resolve(false)
+        } catch {
+          reject(new Error('ID checking error'))
+        }
+      })
+    }
+    queryString = `
+      UPDATE responses SET message = '${newMessage}', category_id = ${id}, bottom_points = ${bottom_points}, top_points = ${top_points} WHERE id = ${existingID}`
+
+    const result = await dbQuery(queryString)
+
+    return new Promise((resolve, reject) => {
+      try {
+        
+        if(result) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
+
+  static async getBalance (userID: number): Promise<number> {
+    const queryString = `
+      SELECT c.points
+      FROM leaderboard AS c
+      WHERE c.user_id = ${userID}
+      LIMIT 1`
+
+    const result = await dbQuery(queryString)
+
+    return new Promise((resolve, reject) => {
+      try {
+        const row = (<RowDataPacket> result)[0]
+        if (row) {
+          resolve(row.points)
+        } else {
+          resolve(0)
+        }
+      } catch {
+        reject(new Error('DB Connection OR Query Issue'))
+      }
+    })
+  }
 }

@@ -16,7 +16,7 @@ export class View extends SubCommand {
       let responses = await GameResult.getAllResponses();
       const embed = new MessageEmbed()
         .setColor('#FFA500')
-        .setTitle(`Categories`)
+        .setTitle(`Responses`)
 
         responses.forEach(response => {
             embed.addField(`${response.getId()}). ${response.getMessage()}`, `${response.getBottomPoints()} -${response.getTopPoints()}`)

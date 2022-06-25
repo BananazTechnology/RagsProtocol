@@ -73,7 +73,7 @@ export class Add extends SubCommand {
     const category = await Category.getCategoryByName(category_name);
     console.log(category);
     let category_id = -1;
-    if(category){
+    if(category) {
         category_id = category.getId();
     }
 

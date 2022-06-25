@@ -13,6 +13,7 @@ export class Profile extends Command {
   name = 'profile'
   description = 'Profile Command'
   type = 'CHAT_INPUT'
+  userRequired = false
   options: SubCommand[] = [new Create(), new View(), new Other(), new Edit()]
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {

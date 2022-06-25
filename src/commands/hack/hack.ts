@@ -75,8 +75,12 @@ export class Hack extends Command {
         const embed = new MessageEmbed()
           .setColor('#FFA500')
           .setTitle(chosenOne.getCategoryName())
-          .setDescription(`${chosenOne.getCategoryDescription()} \n ${result.getMessage()} \n\n*You earned* **${points}** *points* \n***You have ${totalpoints} total points!***`)
 
+        if(points < 0){
+          embed.setDescription(`${chosenOne.getCategoryDescription()} \n ${result.getMessage()} \n\n*You lost* **${Math.abs(points)}** *points* \n***You have ${totalpoints} total points!***`)
+        } else {
+          embed.setDescription(`${chosenOne.getCategoryDescription()} \n ${result.getMessage()} \n\n*You earned* **${points}** *points* \n***You have ${totalpoints} total points!***`)
+        }
         const cat = result.getCategory()
         if(cat > 0 && cat < 8) {
           

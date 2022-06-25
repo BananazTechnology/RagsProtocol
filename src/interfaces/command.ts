@@ -22,21 +22,17 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
 
   public async execute (client: Client, interaction: BaseCommandInteraction) {
     try {
-      const log = InteractionLog.log(interaction).catch(() => {
-        throw new Error('DB Connection issue with LOG')
-      })
+      const log = InteractionLog.log(interaction).catch(() => { return undefined })
 
       let result: LogResult = new LogResult(false, LogStatus.Incomplete, 'Error in command')
 
-      const user = await User.getByDiscordId(interaction.user.id).catch(() => {
-        throw new Error('DB Connection issue with USER')
-      })
+      const user = await User.getByDiscordId(interaction.user.id).catch(() => { return undefined })
 
       if (!user) {
         if (!this.userRequired) {
           result = await this.runCmd(client, interaction, user)
           console.log(`UNKNOWN(${interaction.user.username}) ran ${this.name}: ${result.message}`);
-          (await log).complete(result)
+          (await log)?.complete(result)
           return
         } else {
           interaction.reply({
@@ -45,7 +41,7 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
           })
           result = new LogResult(true, LogStatus.Warn, 'Command not run. User has no profile.')
           console.log(`UNKNOWN(${interaction.user.username}) ran ${this.name}: ${result.message}`);
-          (await log).complete(result)
+          (await log)?.complete(result)
           return
         }
       }
@@ -59,7 +55,7 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
           })
           result = new LogResult(false, LogStatus.Warn, 'Player does not have required role')
           console.log(`${user.getDiscordName()} ran ${this.name}: ${result.message}`);
-          (await log).complete(result)
+          (await log)?.complete(result)
           return
         }
       }
@@ -80,7 +76,7 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
               })
               result = new LogResult(false, LogStatus.Warn, 'Player has not reached cooldown')
               console.log(`${user.getDiscordName()} ran ${this.name}: ${result.message}`);
-              (await log).complete(result)
+              (await log)?.complete(result)
               return
             }
           }
@@ -89,9 +85,13 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
 
       result = await this.runCmd(client, interaction, user)
       console.log(`${user.getDiscordName()} ran ${this.name}: ${result.message}`);
-      (await log).complete(result)
+      (await log)?.complete(result)
     } catch {
       console.log('Caught Command Execution Error')
+      interaction.reply({
+        ephemeral: true,
+        content: 'That didnt go as planned'
+      })
     }
   }
 

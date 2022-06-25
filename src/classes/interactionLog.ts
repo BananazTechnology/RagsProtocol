@@ -98,9 +98,9 @@ export class InteractionLog {
             reject(new Error('Log Unsuccessful'))
           }
         })
-        .catch((err: AxiosError) => {
+        .catch(() => {
           // console.log(err)
-          reject(err)
+          reject(new Error('DB connect issue'))
         })
     })
   }

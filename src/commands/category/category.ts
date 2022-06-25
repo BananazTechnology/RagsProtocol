@@ -13,6 +13,7 @@ export class Category extends Command {
   name = 'category'
   description = 'Category Command'
   type = 'CHAT_INPUT'
+  requiredRole = 930216594737594439n;
   options: SubCommand[] = [new View(), new Add(), new Edit(), new Remove()]//new Create(), new View(), new Other(), new Edit()]
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {

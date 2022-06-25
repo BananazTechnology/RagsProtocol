@@ -13,6 +13,7 @@ export class Response extends Command {
   name = 'response'
   description = 'Response Command'
   type = 'CHAT_INPUT'
+  requiredRole = 930216594737594439n;
   options: SubCommand[] = [new View(), new Add(), new Update(), new Remove()];//new View(), new Add(), new Edit(), new Remove()]
 
   async run (client: Client, interaction: BaseCommandInteraction, user?: User): Promise<LogResult> {

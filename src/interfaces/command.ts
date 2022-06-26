@@ -30,7 +30,6 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
 
       if (!user) {
         if (!this.userRequired) {
-          console.log(`gets to user required`)
           result = await this.runCmd(client, interaction, user)
           console.log(`UNKNOWN(${interaction.user.username}) ran ${this.name}: ${result.message}`);
           (await log)?.complete(result)
@@ -48,7 +47,6 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
       }
 
       if (this.requiredRole) {
-        console.log(`gets to role required`)
         const hasRole: boolean = await user.checkRole(this.requiredRole, interaction)
         if (!hasRole) {
           interaction.reply({
@@ -63,7 +61,6 @@ export abstract class Command implements ChatInputApplicationCommandData, Intera
       }
 
       if (this.cooldown) {
-        console.log(`gets to cooldown required`)
         const lastLog = await InteractionLog.getLastByCommand(user, interaction)
 
         if (lastLog) {

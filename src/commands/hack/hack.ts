@@ -97,7 +97,7 @@ export class Hack extends Command {
       }
 
       if (cat === 7 && user) {
-        sendToOne(client, '940798983863930950', `JACKPOT ${user.getDiscordName()} HAS WON A NIDUS. Here's their wallet: ${user.getWalletAddress()}`)
+        sendToOne(client, '990267596777619517', `JACKPOT ${user.getDiscordName()} HAS WON A MANTIS. Here's their wallet: ${user.getWalletAddress()}`)
       }
 
       await interaction.followUp({
